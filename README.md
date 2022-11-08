@@ -226,8 +226,8 @@ config system virtual-wan-link
         edit 1
             set name "all"
             set mode sla
-            set dst "SlaDst"
-            set src "SlaSrc"
+            set dst "DstNet"
+            set src "SrcNet"
             config sla
                 edit "10.150.56.62"
                     set id 1
