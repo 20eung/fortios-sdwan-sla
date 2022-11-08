@@ -28,7 +28,7 @@ config vpn ipsec phase1-interface
         set remote-gw 20.249.200.11
         set psksecret vpn12345
     next
-    edit "Internet"
+    edit "ToCenter"
         set interface "wan1"
         set ike-version 2
         set keylife 28800
@@ -62,8 +62,8 @@ config vpn ipsec phase2-interface
         set auto-negotiate enable
         set keylifeseconds 27000
     next
-    edit "Internet"
-        set phase1name "Internet"
+    edit "ToCenter"
+        set phase1name "ToCenter"
         set proposal 3des-sha1
         set pfs disable
         set replay disable
@@ -93,7 +93,7 @@ config system interface
         set remote-ip 192.168.113.145 255.255.255.252
         set interface "wan1"
     next
-    edit "Internet"
+    edit "ToCenter"
         set vdom "root"
         set ip 192.168.78.94 255.255.255.255
         set allowaccess ping
@@ -108,17 +108,17 @@ end
 ### Remote-SD-WAN # show router static
 ```
 config router static
-    edit 23
+    edit 1
         set dst 10.150.56.62 255.255.255.255
-        set device "Internet"
+        set device "ToCenter"
         set link-monitor-exempt enable
     next
-    edit 24
+    edit 2
         set dst 10.150.56.62 255.255.255.255
         set device "Azure1"
         set link-monitor-exempt enable
     next
-    edit 25
+    edit 3
         set dst 10.150.56.62 255.255.255.255
         set device "Azure2"
         set link-monitor-exempt enable
@@ -133,7 +133,6 @@ config firewall address
         set subnet 10.150.0.0 255.255.0.0
     next
     edit "10.150.57.224/27"
-        set uuid ef166986-5e76-51ed-a539-37cbbd52838c
         set subnet 10.150.57.224 255.255.255.224
     next
 end
@@ -142,15 +141,14 @@ end
 ### Remote-SD-WAN # show firewall addrgrp
 ```
 config firewall addrgrp
-    edit "DstNet"
+    edit "CenterNet"
         set member "10.150.0.0/16"
     next
-    edit "SrcNet"
+    edit "RemoteNet"
         set member "10.150.57.224/27"
     next
 end
 ```
-
 
 ### Remote-SD-WAN # show firewall policy
 ```
@@ -158,8 +156,8 @@ config firewall policy
     edit 1
         set srcintf "Internal"
         set dstintf "virtual-wan-link"
-        set srcaddr "SrcNet"
-        set dstaddr "DstNet"
+        set srcaddr "RemoteNet"
+        set dstaddr "CenterNet"
         set action accept
         set schedule "always"
         set service "ALL"
@@ -168,7 +166,7 @@ config firewall policy
     edit 2
         set srcintf "Internal"
         set dstintf "wan1"
-        set srcaddr "SrcNet"
+        set srcaddr "RemoteNet"
         set dstaddr "all"
         set action accept
         set schedule "always"
@@ -179,8 +177,8 @@ config firewall policy
     edit 3
         set srcintf "virtual-wan-link"
         set dstintf "Internal"
-        set srcaddr "DstNet"
-        set dstaddr "SrcNet"
+        set srcaddr "CenterNet"
+        set dstaddr "RemoteNet"
         set action accept
         set schedule "always"
         set service "ALL"
@@ -203,7 +201,7 @@ config system virtual-wan-link
             set gateway 192.168.113.146
         next
         edit 3
-            set interface "Internet"
+            set interface "ToCenter"
             set gateway 192.168.78.93
             set cost 50
         next
@@ -226,8 +224,8 @@ config system virtual-wan-link
         edit 1
             set name "all"
             set mode sla
-            set dst "DstNet"
-            set src "SrcNet"
+            set dst "CenterNet"
+            set src "RemoteNet"
             config sla
                 edit "10.150.56.62"
                     set id 1
@@ -236,5 +234,118 @@ config system virtual-wan-link
             set priority-members 1 2 3
         next
     end
+end
+```
+
+#### Center-SD-WAN # show vpn ipsec phase1-interface Remote
+```
+config vpn ipsec phase1-interface
+    edit "ToRemote"
+        set interface "wan1"
+        set ike-version 2
+        set keylife 28800
+        set peertype any
+        set net-device disable
+        set proposal 3des-sha1
+        set dpd on-idle
+        set dhgrp 2
+        set remote-gw 153.156.83.149
+        set psksecret vpn12345
+    next
+end
+```
+
+#### Center-SD-WAN # show vpn ipsec phase2-interface Remote
+```
+config vpn ipsec phase2-interface
+    edit "ToRemote"
+        set phase1name "ToRemote"
+        set proposal 3des-sha1
+        set pfs disable
+        set replay disable
+        set auto-negotiate enable
+        set keylifeseconds 27000
+    next
+end
+```
+
+#### Center-SD-WAN # show vpn ipsec phase2-interface Remote
+```
+config system interface
+    edit "ToRemote"
+        set vdom "root"
+        set ip 192.168.78.93 255.255.255.255
+        set allowaccess ping
+        set type tunnel
+        set tcp-mss 1350
+        set remote-ip 192.168.78.94 255.255.255.252
+        set interface "wan1"
+    next
+end
+```
+
+### Center-SD-WAN # show router static
+```
+config router static
+    edit 1
+        set dst 10.150.57.224 255.255.255.224
+        set device "ToRemote"
+    next
+end
+```
+
+### Center-SD-WAN # show firewall address
+```
+config firewall address
+    edit "Remote_192.168.78.94/32"
+        set subnet 192.168.113.142 255.255.255.255
+    next
+    edit "Remote_192.168.113.142/32"
+        set subnet 192.168.113.142 255.255.255.255
+    next
+    edit "Remote_192.168.113.146/32"
+        set subnet 192.168.113.146 255.255.255.255
+    next
+    edit "Remote_10.150.57.224/27"
+        set subnet 10.150.57.224 255.255.255.224
+    next
+end
+```
+
+### Center-SD-WAN # show firewall addrgrp
+```
+config firewall addrgrp
+    edit "RemoteNet"
+        set member "Remote_192.168.78.94/32" "Remote_192.168.113.142/32" "Remote_192.168.113.146/32" "Remote_10.150.57.224/27"
+    next
+    edit "CenterNet"
+        set member "10.150.0.0/16"
+    next
+end
+```
+
+### Center-SD-WAN # show firewall policy
+```
+config firewall policy
+    edit 1
+        set srcintf "ToRemote"
+        set dstintf "internal"
+        set srcaddr "RemoteNet"
+        set dstaddr "CenterNet"
+        set action accept
+        set schedule "always"
+        set service "ALL"
+        set logtraffic all
+    next
+    edit 2
+        set srcintf "internal"
+        set dstintf "ToRemote"
+        set srcaddr "CenterNet"
+        set dstaddr "RemoteNet"
+        set action accept
+        set schedule "always"
+        set service "ALL"
+        set logtraffic all
+    next
 end
 ```
