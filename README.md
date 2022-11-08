@@ -1,5 +1,5 @@
-# fortios-sdwan-sla
-FortiGate SD-WAN SLA Config
+# FortiGate SD-WAN SLA Config
+![Diagram](diagram.png "Diagram")
 
 ## Remote FortiGate Config
 
