@@ -1,7 +1,8 @@
 # fortios-sdwan-sla
 FortiGate SD-WAN SLA Config
 
-Remote-SD-WAN # show system interface
+### Remote-SD-WAN # show system interface
+```
 config system interface
     edit "Azure1"
         set vdom "root"
@@ -30,8 +31,9 @@ config system interface
         set interface "wan1"
     next
 end
-
-Remote-SD-WAN #  show vpn ipsec phase1-interface
+```
+### Remote-SD-WAN #  show vpn ipsec phase1-interface
+```
 config vpn ipsec phase1-interface
     edit "Azure1"
         set interface "wan1"
@@ -70,8 +72,9 @@ config vpn ipsec phase1-interface
         set psksecret vpn12345
     next
 end
-
-Remote-SD-WAN #  show vpn ipsec phase2-interface
+```
+### Remote-SD-WAN #  show vpn ipsec phase2-interface
+```
 config vpn ipsec phase2-interface
     edit "Azure1"
         set phase1name "Azure1"
@@ -98,8 +101,9 @@ config vpn ipsec phase2-interface
         set keylifeseconds 27000
     next
 end
-
-Remote-SD-WAN # show system virtual-wan-link
+```
+### Remote-SD-WAN # show system virtual-wan-link
+```
 config system virtual-wan-link
     set status enable
     config members
@@ -146,8 +150,9 @@ config system virtual-wan-link
         next
     end
 end
-
-Remote-SD-WAN # show router static
+```
+### Remote-SD-WAN # show router static
+```
 config router static
     edit 23
         set dst 10.150.56.62 255.255.255.255
@@ -165,8 +170,9 @@ config router static
         set link-monitor-exempt enable
     next
 end
-
-Remote-SD-WAN # show firewall policy
+```
+### Remote-SD-WAN # show firewall policy
+```
 config firewall policy
     edit 1
         set srcintf "Internal"
@@ -200,8 +206,9 @@ config firewall policy
         set logtraffic all
     next
 end
-
-Remote-SD-WAN # show firewall addrgrp
+```
+### Remote-SD-WAN # show firewall addrgrp
+```
 config firewall addrgrp
     edit "DstNet"
         set member "10.150.0.0/16" "10.178.0.0/16"
@@ -210,8 +217,9 @@ config firewall addrgrp
         set member "10.150.57.224/27"
     next
 end
-
-Remote-SD-WAN # show firewall address
+```
+### Remote-SD-WAN # show firewall address
+```
 config firewall address
     edit "10.150.0.0/16"
         set subnet 10.150.0.0 255.255.0.0
@@ -224,3 +232,4 @@ config firewall address
         set subnet 10.150.57.224 255.255.255.224
     next
 end
+```
