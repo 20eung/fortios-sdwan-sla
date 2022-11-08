@@ -1,6 +1,8 @@
 # fortios-sdwan-sla
 FortiGate SD-WAN SLA Config
 
+## Remote FortiGate Config
+
 ### Remote-SD-WAN #  show vpn ipsec phase1-interface
 ```
 config vpn ipsec phase1-interface
@@ -237,7 +239,9 @@ config system virtual-wan-link
 end
 ```
 
-#### Center-SD-WAN # show vpn ipsec phase1-interface Remote
+## Center FortiGate Config
+
+### Center-SD-WAN # show vpn ipsec phase1-interface Remote
 ```
 config vpn ipsec phase1-interface
     edit "ToRemote"
@@ -255,7 +259,7 @@ config vpn ipsec phase1-interface
 end
 ```
 
-#### Center-SD-WAN # show vpn ipsec phase2-interface Remote
+### Center-SD-WAN # show vpn ipsec phase2-interface Remote
 ```
 config vpn ipsec phase2-interface
     edit "ToRemote"
@@ -269,7 +273,7 @@ config vpn ipsec phase2-interface
 end
 ```
 
-#### Center-SD-WAN # show vpn ipsec phase2-interface Remote
+### Center-SD-WAN # show vpn ipsec phase2-interface Remote
 ```
 config system interface
     edit "ToRemote"
