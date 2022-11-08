@@ -211,7 +211,7 @@ end
 ```
 config firewall addrgrp
     edit "DstNet"
-        set member "10.150.0.0/16" "10.178.0.0/16"
+        set member "10.150.0.0/16"
     next
     edit "SrcNet"
         set member "10.150.57.224/27"
@@ -223,9 +223,6 @@ end
 config firewall address
     edit "10.150.0.0/16"
         set subnet 10.150.0.0 255.255.0.0
-    next
-    edit "10.178.0.0/16"
-        set subnet 10.178.0.0 255.255.0.0
     next
     edit "10.150.57.224/27"
         set uuid ef166986-5e76-51ed-a539-37cbbd52838c
