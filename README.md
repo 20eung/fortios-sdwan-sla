@@ -6,7 +6,7 @@ FortiGate SD-WAN SLA Config
 ### Remote-SD-WAN #  show vpn ipsec phase1-interface
 ```
 config vpn ipsec phase1-interface
-    edit "Azure1"
+    edit "azure-vpn-1"
         set interface "wan1"
         set ike-version 2
         set keylife 28800
@@ -18,7 +18,7 @@ config vpn ipsec phase1-interface
         set remote-gw 20.214.215.254
         set psksecret vpn12345
     next
-    edit "Azure2"
+    edit "azure-vpn-2"
         set interface "wan1"
         set ike-version 2
         set keylife 28800
@@ -30,7 +30,7 @@ config vpn ipsec phase1-interface
         set remote-gw 20.249.200.11
         set psksecret vpn12345
     next
-    edit "ToCenter"
+    edit "to-center-vpn"
         set interface "wan1"
         set ike-version 2
         set keylife 28800
@@ -48,24 +48,24 @@ end
 ### Remote-SD-WAN #  show vpn ipsec phase2-interface
 ```
 config vpn ipsec phase2-interface
-    edit "Azure1"
-        set phase1name "Azure1"
+    edit "azure-vpn-1"
+        set phase1name "azure-vpn-1"
         set proposal 3des-sha1
         set pfs disable
         set replay disable
         set auto-negotiate enable
         set keylifeseconds 27000
     next
-    edit "Azure2"
-        set phase1name "Azure2"
+    edit "azure-vpn-2"
+        set phase1name "azure-vpn-2"
         set proposal 3des-sha1
         set pfs disable
         set replay disable
         set auto-negotiate enable
         set keylifeseconds 27000
     next
-    edit "ToCenter"
-        set phase1name "ToCenter"
+    edit "to-center-vpn"
+        set phase1name "to-center-vpn"
         set proposal 3des-sha1
         set pfs disable
         set replay disable
@@ -78,7 +78,7 @@ end
 ### Remote-SD-WAN # show system interface
 ```
 config system interface
-    edit "Azure1"
+    edit "azure-vpn-1"
         set vdom "root"
         set ip 192.168.113.142 255.255.255.255
         set type tunnel
@@ -86,7 +86,7 @@ config system interface
         set remote-ip 192.168.113.141 255.255.255.252
         set interface "wan1"
     next
-    edit "Azure2"
+    edit "azure-vpn-2"
         set vdom "root"
         set ip 192.168.113.146 255.255.255.255
         set allowaccess ping
@@ -95,7 +95,7 @@ config system interface
         set remote-ip 192.168.113.145 255.255.255.252
         set interface "wan1"
     next
-    edit "ToCenter"
+    edit "to-center-vpn"
         set vdom "root"
         set ip 192.168.78.94 255.255.255.255
         set allowaccess ping
@@ -112,17 +112,17 @@ end
 config router static
     edit 1
         set dst 10.150.56.62 255.255.255.255
-        set device "ToCenter"
+        set device "to-center-vpn"
         set link-monitor-exempt enable
     next
     edit 2
         set dst 10.150.56.62 255.255.255.255
-        set device "Azure1"
+        set device "azure-vpn-1"
         set link-monitor-exempt enable
     next
     edit 3
         set dst 10.150.56.62 255.255.255.255
-        set device "Azure2"
+        set device "azure-vpn-2"
         set link-monitor-exempt enable
     next
 end
@@ -195,15 +195,15 @@ config system virtual-wan-link
     set status enable
     config members
         edit 1
-            set interface "Azure1"
+            set interface "azure-vpn-1"
             set gateway 192.168.113.141
         next
         edit 2
-            set interface "Azure2"
+            set interface "azure-vpn-2"
             set gateway 192.168.113.146
         next
         edit 3
-            set interface "ToCenter"
+            set interface "to-center-vpn"
             set gateway 192.168.78.93
             set cost 50
         next
@@ -244,7 +244,7 @@ end
 ### Center-SD-WAN # show vpn ipsec phase1-interface Remote
 ```
 config vpn ipsec phase1-interface
-    edit "ToRemote"
+    edit "to-remote-vpn"
         set interface "wan1"
         set ike-version 2
         set keylife 28800
@@ -262,8 +262,8 @@ end
 ### Center-SD-WAN # show vpn ipsec phase2-interface Remote
 ```
 config vpn ipsec phase2-interface
-    edit "ToRemote"
-        set phase1name "ToRemote"
+    edit "to-remote-vpn"
+        set phase1name "to-remote-vpn"
         set proposal 3des-sha1
         set pfs disable
         set replay disable
@@ -276,7 +276,7 @@ end
 ### Center-SD-WAN # show vpn ipsec phase2-interface Remote
 ```
 config system interface
-    edit "ToRemote"
+    edit "to-remote-vpn"
         set vdom "root"
         set ip 192.168.78.93 255.255.255.255
         set allowaccess ping
@@ -293,7 +293,7 @@ end
 config router static
     edit 1
         set dst 10.150.57.224 255.255.255.224
-        set device "ToRemote"
+        set device "to-remote-vpn"
     next
 end
 ```
@@ -332,7 +332,7 @@ end
 ```
 config firewall policy
     edit 1
-        set srcintf "ToRemote"
+        set srcintf "to-remote-vpn"
         set dstintf "internal"
         set srcaddr "RemoteNet"
         set dstaddr "CenterNet"
@@ -343,7 +343,7 @@ config firewall policy
     next
     edit 2
         set srcintf "internal"
-        set dstintf "ToRemote"
+        set dstintf "to-remote-vpn"
         set srcaddr "CenterNet"
         set dstaddr "RemoteNet"
         set action accept
