@@ -143,10 +143,10 @@ end
 ### Remote-SD-WAN # show firewall addrgrp
 ```
 config firewall addrgrp
-    edit "CenterNet"
+    edit "center-net"
         set member "10.150.0.0/16"
     next
-    edit "RemoteNet"
+    edit "remote-net"
         set member "10.150.57.224/27"
     next
 end
@@ -158,8 +158,8 @@ config firewall policy
     edit 1
         set srcintf "Internal"
         set dstintf "virtual-wan-link"
-        set srcaddr "RemoteNet"
-        set dstaddr "CenterNet"
+        set srcaddr "remote-net"
+        set dstaddr "center-net"
         set action accept
         set schedule "always"
         set service "ALL"
@@ -168,7 +168,7 @@ config firewall policy
     edit 2
         set srcintf "Internal"
         set dstintf "wan1"
-        set srcaddr "RemoteNet"
+        set srcaddr "remote-net"
         set dstaddr "all"
         set action accept
         set schedule "always"
@@ -179,8 +179,8 @@ config firewall policy
     edit 3
         set srcintf "virtual-wan-link"
         set dstintf "Internal"
-        set srcaddr "CenterNet"
-        set dstaddr "RemoteNet"
+        set srcaddr "center-net"
+        set dstaddr "remote-net"
         set action accept
         set schedule "always"
         set service "ALL"
@@ -226,8 +226,8 @@ config system virtual-wan-link
         edit 1
             set name "all"
             set mode sla
-            set dst "CenterNet"
-            set src "RemoteNet"
+            set dst "center-net"
+            set src "remote-net"
             config sla
                 edit "10.150.56.62"
                     set id 1
@@ -319,10 +319,10 @@ end
 ### Center-SD-WAN # show firewall addrgrp
 ```
 config firewall addrgrp
-    edit "RemoteNet"
+    edit "remote-net"
         set member "Remote_192.168.78.94/32" "Remote_192.168.113.142/32" "Remote_192.168.113.146/32" "Remote_10.150.57.224/27"
     next
-    edit "CenterNet"
+    edit "center-net"
         set member "10.150.0.0/16"
     next
 end
@@ -334,8 +334,8 @@ config firewall policy
     edit 1
         set srcintf "to-remote-vpn"
         set dstintf "internal"
-        set srcaddr "RemoteNet"
-        set dstaddr "CenterNet"
+        set srcaddr "remote-net"
+        set dstaddr "center-net"
         set action accept
         set schedule "always"
         set service "ALL"
@@ -344,8 +344,8 @@ config firewall policy
     edit 2
         set srcintf "internal"
         set dstintf "to-remote-vpn"
-        set srcaddr "CenterNet"
-        set dstaddr "RemoteNet"
+        set srcaddr "center-net"
+        set dstaddr "remote-net"
         set action accept
         set schedule "always"
         set service "ALL"
